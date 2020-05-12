@@ -88,7 +88,7 @@
               </filters>
               <transformers>
                 <transformer>
-                  <mainClass>com.ververica.example.StreamingJob</mainClass>
+                  <mainClass>com.ververica.example.FlinkParquetWriter</mainClass>
                 </transformer>
               </transformers>
             </configuration>
@@ -125,7 +125,7 @@
     <dependency>
       <groupId>org.apache.flink</groupId>
       <artifactId>flink-streaming-java_2.12</artifactId>
-      <version>1.10.1</version>
+      <version>1.10.0</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
