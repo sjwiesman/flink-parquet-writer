@@ -6,6 +6,7 @@ A simple Flink job that reads Avro records from Kafka and writes the data as par
 
 | Flags | Description |
 |-------|------------|
+|generate-data | When set the Job will generate data in memory instead of consuming from Kafka |
 | topic | The Kafka topic to consume data from |
 | bootstrap.servers | A comma separated list of Kafka brokers |
 | output | The output topic level directory to write parquet |
