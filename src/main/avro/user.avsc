@@ -4,7 +4,6 @@
  "fields": [
      {"name": "name", "type": "string"},
      {"name": "favorite_number",  "type": ["int", "null"]},
-     {"name": "favorite_color", "type": ["string", "null"]},
-     {"name": "type_timestamp_millis", "type": {"type": "long", "logicalType": "timestamp-millis"}}
+     {"name": "favorite_color", "type": ["string", "null"]}
  ]
 }
