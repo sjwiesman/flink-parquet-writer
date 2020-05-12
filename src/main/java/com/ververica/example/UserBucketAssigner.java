@@ -35,4 +35,11 @@ public class UserBucketAssigner implements BucketAssigner<User, String> {
     public SimpleVersionedSerializer<String> getSerializer() {
         return SimpleVersionedStringSerializer.INSTANCE;
     }
+
+    @Override
+    public String toString() {
+        return "UserBucketAssigner{" +
+                "format=" + BUCKET_FORMAT +
+                '}';
+    }
 }
