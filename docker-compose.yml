@@ -1,0 +1,63 @@
+version: '2.1'
+services:
+  jobmanager:
+    image: sjwiesman/flink:1.10.1-scala_2.12
+    build: ./flink-job
+    hostname: "jobmanager"
+    expose:
+      - "6123"
+    ports:
+      - "8082:8081"
+    command: standalone-job
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    depends_on:
+      - kafka
+      - minio
+  taskmanager:
+    image: sjwiesman/flink:1.10.1-scala_2.12
+    build: ./flink-job
+    expose:
+      - "6121"
+      - "6122"
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    links:
+      - jobmanager:jobmanager
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=jobmanager
+  zookeeper:
+    image: wurstmeister/zookeeper:3.4.6
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka:2.12-2.2.1
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: "kafka"
+      KAFKA_ADVERTISED_PORT: "9092"
+      HOSTNAME_COMMAND: "route -n | awk '/UG[ \t]/{print $$2}'"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "users:1:1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  data-generator:
+      image: sjwiesman/data-generator:1
+      build: ./data-generator
+      depends_on:
+        - kafka
+  minio:
+    image: minio/minio:latest
+    entrypoint: sh
+    command: -c 'mkdir -p /data/parquet && /usr/bin/minio server /data'
+    environment:
+      - MINIO_ACCESS_KEY=demo-key
+      - MINIO_SECRET_KEY=demo-secret
+    expose:
+      - "9000"
+    ports:
+      - "9000:9000"
