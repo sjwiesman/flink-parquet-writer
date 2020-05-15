@@ -30,11 +30,11 @@ public class FlinkParquetWriter {
 
     private static final String OUTPUT = "s3://parquet/";
 
-	public static void main(String[] args) throws Exception {
-	    ParameterTool tool = ParameterTool.fromArgs(args);
+    public static void main(String[] args) throws Exception {
+        ParameterTool tool = ParameterTool.fromArgs(args);
 
-		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-		env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+        final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
         env.getConfig().enableObjectReuse();
         env.enableCheckpointing(10000);
 
@@ -48,11 +48,11 @@ public class FlinkParquetWriter {
                         .build())
                 .name("parquet-writer");
 
-		env.execute("Flink Parquet Writer");
-	}
+        env.execute("Flink Parquet Writer");
+    }
 
-	public static SourceFunction<User> createSourceFunction(ParameterTool tool) {
-	    if (tool.has("data-generator")) {
+    public static SourceFunction<User> createSourceFunction(ParameterTool tool) {
+        if (tool.has("data-generator")) {
             return new UserGenerator(100);
         }
 
@@ -64,6 +64,6 @@ public class FlinkParquetWriter {
 
         DeserializationSchema<User> schema = AvroDeserializationSchema.forSpecific(User.class);
         return new FlinkKafkaConsumer<>(topic, schema, properties)
-                .assignTimestampsAndWatermarks(new UserTimestampAssigner());
+            .assignTimestampsAndWatermarks(new UserTimestampAssigner());
     }
 }
