@@ -17,4 +17,4 @@ $ docker-compose up -d
 ```
 
 You can then navigate localhost:9000 to see the output data.
-The access key is `demo-key` and the access secret is `demo secret`.
+The access key is `demo-key` and the access secret is `demo-secret`.
