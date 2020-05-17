@@ -6,7 +6,7 @@ import org.apache.flink.streaming.api.functions.sink.filesystem.BucketAssigner;
 import org.apache.flink.streaming.api.functions.sink.filesystem.bucketassigners.SimpleVersionedStringSerializer;
 
 import java.time.Instant;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -28,7 +28,7 @@ public class UserBucketAssigner implements BucketAssigner<User, String> {
             formatter = DateTimeFormatter.ofPattern(BUCKET_FORMAT);
         }
 
-        return formatter.format(Instant.ofEpochMilli(context.timestamp()).atZone(ZoneId.of("UTC")).toLocalDateTime());
+        return formatter.format(Instant.ofEpochMilli(context.timestamp()).atZone(ZoneOffset.UTC).toLocalDateTime());
     }
 
     @Override

@@ -14,6 +14,7 @@ services:
     depends_on:
       - kafka
       - minio
+      - schema-registry
   taskmanager:
     image: sjwiesman/flink:1.10.1-scala_2.12
     build: ./flink-job
@@ -45,11 +46,25 @@ services:
       KAFKA_CREATE_TOPICS: "users:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+  schema-registry:
+    image: confluentinc/cp-schema-registry:5.1.2
+    restart: always
+    depends_on:
+      - zookeeper
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181"
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8085"
+    ports:
+      - "8085:8085"
+    expose:
+      - "8085"
   data-generator:
       image: sjwiesman/data-generator:1
       build: ./data-generator
       depends_on:
         - kafka
+        - schema-registry
   minio:
     image: minio/minio:latest
     entrypoint: sh

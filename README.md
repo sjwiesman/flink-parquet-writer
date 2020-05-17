@@ -1,12 +1,13 @@
 # Flink Parquet Writer
 
-A simple Flink job that reads Avro records from Kafka and writes the data as Hive partitioned parquet on Minio.
+A simple Flink job that reads Avro records from Kafka and writes the data as Hive partitioned parquet on MinIO.
 This playground environment includes:
 * Flink Job
 * Kafka
+* Confluent Schema Registry
 * Zookeeper (for Kafka)
 * A data generator
-* Minio
+* MinIO
 
 
 ## Usage 

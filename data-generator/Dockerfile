@@ -9,7 +9,7 @@ RUN cd /opt/data-producer; \
 
 FROM openjdk:8-jre
 
-COPY --from=builder /opt/data-producer/target/data-generator-*.jar /opt/data/data-producer.jar
+COPY --from=builder /opt/data-producer/target/data-generator-*.jar /opt/data-generator.jar
 
 RUN cd /opt
 

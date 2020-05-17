@@ -5,8 +5,7 @@ import com.ververica.example.util.UserGenerator;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.core.fs.Path;
-import org.apache.flink.formats.avro.AvroDeserializationSchema;
-import org.apache.flink.formats.avro.AvroRowSerializationSchema;
+import org.apache.flink.formats.avro.registry.confluent.ConfluentRegistryAvroDeserializationSchema;
 import org.apache.flink.formats.parquet.avro.ParquetAvroWriters;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -29,6 +28,8 @@ public class FlinkParquetWriter {
     private static final String TOPIC = "users";
 
     private static final String OUTPUT = "s3://parquet/";
+
+    private static final String REGISTRY = "http://schema-registry:8085";
 
     public static void main(String[] args) throws Exception {
         ParameterTool tool = ParameterTool.fromArgs(args);
@@ -62,7 +63,7 @@ public class FlinkParquetWriter {
 
         String topic = tool.get("topic", TOPIC);
 
-        DeserializationSchema<User> schema = AvroDeserializationSchema.forSpecific(User.class);
+        DeserializationSchema<User> schema = ConfluentRegistryAvroDeserializationSchema.forSpecific(User.class, REGISTRY);
         return new FlinkKafkaConsumer<>(topic, schema, properties)
             .assignTimestampsAndWatermarks(new UserTimestampAssigner());
     }
