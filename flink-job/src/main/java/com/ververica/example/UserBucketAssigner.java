@@ -20,6 +20,8 @@ public class UserBucketAssigner implements BucketAssigner<User, String> {
 
     private static final String BUCKET_FORMAT = "'date='YYYY-MM-dd'/hour='HH";
 
+    private static final String UNKNOWN_BUCKET = "date=__HIVE_DEFAULT_PARTITION__/hour=__HIVE_DEFAULT_PARTITION__";
+
     private transient DateTimeFormatter formatter;
 
     @Override
@@ -28,7 +30,15 @@ public class UserBucketAssigner implements BucketAssigner<User, String> {
             formatter = DateTimeFormatter.ofPattern(BUCKET_FORMAT);
         }
 
-        return formatter.format(Instant.ofEpochMilli(context.timestamp()).atZone(ZoneOffset.UTC).toLocalDateTime());
+        Long timestamp = context.timestamp();
+        if (timestamp == null) {
+            return UNKNOWN_BUCKET;
+        }
+
+        return Instant.ofEpochMilli(timestamp)
+                .atZone(ZoneOffset.UTC)
+                .toLocalDateTime()
+                .format(formatter);
     }
 
     @Override
