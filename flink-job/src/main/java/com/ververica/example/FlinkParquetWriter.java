@@ -1,7 +1,6 @@
 package com.ververica.example;
 
 import com.ververica.avro.generated.User;
-import com.ververica.example.util.UserGenerator;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.core.fs.Path;
@@ -53,10 +52,6 @@ public class FlinkParquetWriter {
     }
 
     public static SourceFunction<User> createSourceFunction(ParameterTool tool) {
-        if (tool.has("data-generator")) {
-            return new UserGenerator(100);
-        }
-
         Properties properties = new Properties();
         properties.put(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, tool.get(CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, KAFKA));
         properties.put("group.id", "flink-parquet-writer");
